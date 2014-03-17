@@ -63,7 +63,7 @@ module Fluent
  
       record = Hash.new
       headers.each_with_index{|header, i|
-        record[header] = datas[i].to_i * @scale
+        record[header] = datas[i].to_f * @scale
       }
       Engine.emit(@tag, now, record)
     end
