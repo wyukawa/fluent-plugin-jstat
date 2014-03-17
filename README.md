@@ -22,7 +22,7 @@ $ fluent-gem install fluent-plugin-jstat
   emit_interval 60
   tag hiveserver.jstat
   pid_path /var/run/hiveserver.pid
-  scale 100
+  scale 1
  </source>
 ```
 
@@ -43,13 +43,13 @@ $ fluent-gem install fluent-plugin-jstat
 
 ```
 2014-03-17 13:44:36 +0900 hiveserver.jstat: {"S0":0.0,"S1":0.0,"E":1.25,"O":41.29,"P":63.54,"YGC":253.0,"YGCT":1.519,"FGC":252.0,"FGCT":137.145,"GCT":138.665}
-2014-03-17 13:44:41 +0900 hiveserver.jstat: {"S0":0.0,"S1":0.0,"E":1.44,"O":41.29,"P":63.54,"YGC":253.0,"YGCT":1.519,"FGC":252.0,"FGCT":137.145,"GCT":138.665}
-2014-03-17 13:44:46 +0900 hiveserver.jstat: {"S0":0.0,"S1":0.0,"E":1.97,"O":41.29,"P":63.54,"YGC":253.0,"YGCT":1.519,"FGC":252.0,"FGCT":137.145,"GCT":138.665}
 ```
 
-## Usage
+If you specify scale 100, the following result.
 
-TODO: Write usage instructions here
+```
+2014-03-17 13:44:36 +0900 hiveserver.jstat: {"S0":0.0,"S1":0.0,"E":125.0,"O":4129.0,"P":6354.0,"YGC":25300.0,"YGCT":151.9,"FGC":25200.0,"FGCT":13714.5,"GCT":13866.5}
+```
 
 ## Contributing
 
