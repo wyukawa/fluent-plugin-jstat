@@ -58,6 +58,7 @@ module Fluent
       now = Engine.now
       io = IO.popen(command, "r")
       lines = io.readlines()
+      io.close
       headers = lines[0].split()
       datas = lines[1].split()
  
