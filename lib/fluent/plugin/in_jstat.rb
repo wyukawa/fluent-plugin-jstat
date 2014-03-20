@@ -30,8 +30,6 @@ module Fluent
 
     def configure(conf)
       super
-      @pid = File.read(@pid_path)
-      @command = "#{@jstat_path} #{@option} #{@pid}"
     end
 
     def start
@@ -55,8 +53,10 @@ module Fluent
     end
 
     def on_timer
+      pid = File.read(@pid_path)
+      command = "#{@jstat_path} #{@option} #{pid}"
       now = Engine.now
-      io = IO.popen(@command, "r")
+      io = IO.popen(command, "r")
       lines = io.readlines()
       headers = lines[0].split()
       datas = lines[1].split()
