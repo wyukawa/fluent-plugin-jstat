@@ -15,6 +15,8 @@ $ fluent-gem install fluent-plugin-jstat
 
 ## Configuration
 
+### with pid_path
+
 ```
 <source>
   type jstat
@@ -22,6 +24,19 @@ $ fluent-gem install fluent-plugin-jstat
   emit_interval 60
   tag hiveserver.jstat
   pid_path /var/run/hiveserver.pid
+  scale 1
+ </source>
+```
+
+### with process_name
+
+```
+<source>
+  type jstat
+  option -gcutil
+  emit_interval 60
+  tag hiveserver.jstat
+  process_name /usr/lib/hive
   scale 1
  </source>
 ```
@@ -34,8 +49,10 @@ $ fluent-gem install fluent-plugin-jstat
   * emit interval second (default: 60)
 * tag
   * emit tag
-* pid_path
+* pid_path (`pid_path` or `process_name` option is required.)
   * pid file path. fluent-plugin-jstat executes jstat command with process id written by thie path.
+* process_name
+  * process name. jstat command is executed with process id, including this name. If there is more than one process, the first one will be selected.
 * scale
   * scale jstat command resultz(default: 1)
 

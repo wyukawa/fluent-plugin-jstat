@@ -10,7 +10,8 @@ module Fluent
     config_param :tag, :string
     config_param :jstat_path, :string, :default => "jstat"
     config_param :option, :string
-    config_param :pid_path, :string
+    config_param :pid_path, :string, :default => nil
+    config_param :process_name, :string, :default => nil
     config_param :scale, :integer, :default => 1
 
     class TimerWatcher < Coolio::TimerWatcher
@@ -30,6 +31,9 @@ module Fluent
 
     def configure(conf)
       super
+      if @pid_path.nil? && @process_name.nil?
+        raise Fluent::ConfigError, "'pid_path' or 'process_name' option is required on jstat input"
+      end
     end
 
     def start
@@ -53,12 +57,10 @@ module Fluent
     end
 
     def on_timer
-      pid = File.read(@pid_path)
+      pid = retrieve_pid()
       command = "#{@jstat_path} #{@option} #{pid}"
       now = Engine.now
-      io = IO.popen(command, "r")
-      lines = io.readlines()
-      io.close
+      lines = exec_command(command)
       headers = lines[0].split()
       datas = lines[1].split()
  
@@ -67,6 +69,22 @@ module Fluent
         record[header] = datas[i].to_f * @scale
       }
       Engine.emit(@tag, now, record)
+    end
+
+    private
+    def exec_command(command)
+      io = IO.popen(command, "r")
+      lines = io.readlines()
+      io.close
+      lines
+    end
+
+    def retrieve_pid
+      unless @pid_path.nil?
+        File.read(@pid_path)
+      else
+        exec_command("pgrep -f \"#{@process_name}\"")[0]
+      end
     end
   end
 end
